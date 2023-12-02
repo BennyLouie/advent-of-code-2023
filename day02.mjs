@@ -74,11 +74,39 @@ function part1(red, green, blue, input) {
   console.log('Sum: ' + sum);
 }
 
-function part2() {
-  const input = getInput();
-  //do something here
+function part2(input) {
+  let pattern = /Game \d+: /;
+  let sum = 0;
+  input.forEach(game => {
+    const removeGame = game.replace(pattern, "");
+    const array = removeGame.split(";");
+    let hash = {red: 0, blue: 0, green: 0};
+    array.forEach(round => {
+      // console.log(round)
+      let pairs = round.split(",");
+      for (let i = 0; i < pairs.length; i++) {
+        // Split each pair into number and color
+        let [number, color] = pairs[i].trim().split(" ");
+        let tmp = {};
+        // Convert the number to an integer
+        number = parseInt(number);
+        // console.log(number)
+        // Update the hash with the color as the key and the number as the value
+        tmp[color] = (tmp[color] || 0) + number
+        // console.log("temp: " + tmp[color])
+        hash[color] = hash[color] < tmp[color] ? tmp[color] : hash[color];
+        // console.log("hash: " + hash[color])
+      }
+    })
+    // console.log("hash: ")
+    // console.log(hash)
+    const power = hash["red"] * hash["blue"] * hash["green"]
+    sum += power
+  })
+  console.log(sum)
 }
 
 // part1(12, 13, 14, test1Input);
-part1(12, 13, 14, getInput());
-part2();
+// part1(12, 13, 14, getInput());
+// part2(test1Input);
+part2(getInput());
